@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+    <title>OKOOO Robot</title>
+
+</head>
+
+<body>
+
+<!-- end div.sandbar -->
+
+<div id="wrapper">
+
+    <div id="main" class="main">
+
+
+        <div id="content">
+
+            <div>
+
+                <h1 class="page-title">OKOOO Robot API</h1>
+
+                <div>
+
+
+                    <!--<h2>Draft Version</h2>-->
+
+                    <p><i>Last updated May. 21, 2015</i></p>
+
+                    <div class="special">
+                        <p>本文档是 OKOOO 抓取接口文档。</p>
+                    </div>
+
+
+                    <h2 id="Pano">Soccer</h2>
+
+                    <h3>参数表</h3>
+                    <table width="100%">
+                        <thead>
+                        <tr>
+                            <th>参数</th>
+                            <th>必填</th>
+                            <th>描述</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td><code>是</code></td>
+                            <td>赛事id</td>
+                        </tr>
+                        <tr>
+                            <td><code>type</code></td>
+                            <td><code>否</code></td>
+                            <td>获取数据类型.<br/>百家欧指：BaijiaBooks，<br/>权威：AuthoriteBooks，<br/>大公司：BigBooks
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>返回结果</h3>
+                    <table width="100%">
+                        <thead>
+                        <tr>
+                            <th>字段</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><code>MakerID</code></td>
+                            <td><code>int</code></td>
+                            <td>公司ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>CompanyName</code></td>
+                            <td><code>string</code></td>
+                            <td>公司名</td>
+                        </tr>
+                        <tr>
+                            <td><code>CompanyCountry</code></td>
+                            <td><code>string</code></td>
+                            <td>公司所属国家</td>
+                        </tr>
+                        <tr>
+                            <td><code>Start</code></td>
+                            <td><code>object</code></td>
+                            <td>初指</td>
+                        </tr>
+                        <tr>
+                            <td><code>Start.home</code></td>
+                            <td><code>number</code></td>
+                            <td>主</td>
+                        </tr>
+                        <tr>
+                            <td><code>Start.draw</code></td>
+                            <td><code>number</code></td>
+                            <td>平</td>
+                        </tr>
+                        <tr>
+                            <td><code>Start.away</code></td>
+                            <td><code>number</code></td>
+                            <td>客</td>
+                        </tr>
+
+                        <tr>
+                            <td><code>End</code></td>
+                            <td><code>object</code></td>
+                            <td>最新指数</td>
+                        </tr>
+                        <tr>
+                            <td><code>End.home</code></td>
+                            <td><code>number</code></td>
+                            <td>主</td>
+                        </tr>
+                        <tr>
+                            <td><code>End.draw</code></td>
+                            <td><code>number</code></td>
+                            <td>平</td>
+                        </tr>
+                        <tr>
+                            <td><code>End.away</code></td>
+                            <td><code>number</code></td>
+                            <td>客</td>
+                        </tr>
+
+                        <tr>
+                            <td><code>Radio</code></td>
+                            <td><code>object</code></td>
+                            <td>概率</td>
+                        </tr>
+                        <tr>
+                            <td><code>Radio.home</code></td>
+                            <td><code>number</code></td>
+                            <td>主</td>
+                        </tr>
+                        <tr>
+                            <td><code>Radio.draw</code></td>
+                            <td><code>number</code></td>
+                            <td>平</td>
+                        </tr>
+                        <tr>
+                            <td><code>Radio.away</code></td>
+                            <td><code>number</code></td>
+                            <td>客</td>
+                        </tr>
+
+                        <tr>
+                            <td><code>Kelly</code></td>
+                            <td><code>object</code></td>
+                            <td>最新凯利指数</td>
+                        </tr>
+                        <tr>
+                            <td><code>Kelly.home</code></td>
+                            <td><code>number</code></td>
+                            <td>主</td>
+                        </tr>
+                        <tr>
+                            <td><code>Kelly.draw</code></td>
+                            <td><code>number</code></td>
+                            <td>平</td>
+                        </tr>
+                        <tr>
+                            <td><code>Kelly.away</code></td>
+                            <td><code>number</code></td>
+                            <td>客</td>
+                        </tr>
+                        <tr>
+                            <td><code>Payoff</code></td>
+                            <td><code>number</code></td>
+                            <td>赔付率</td>
+                        </tr>
+                        <tr>
+                            <td><code>startUpdatetime</code></td>
+                            <td><code>number</code></td>
+                            <td>最初更新时间 与 当前的时间差，单位秒</td>
+                        </tr>
+                        <tr>
+                            <td><code>Updatetime</code></td>
+                            <td><code>number</code></td>
+                            <td>最近更新时间 与 当前的时间差，单位秒</td>
+                        </tr>
+                        <tr>
+                            <td><code>spchangeHometeam</code></td>
+                            <td><code>array</code></td>
+                            <td>分时数据</td>
+                        </tr>
+                        <tr>
+                            <td><code>spchangeHometeam[].Change</code></td>
+                            <td><code>array</code></td>
+                            <td>赔率[主,客,平]</td>
+                        </tr>
+                        <tr>
+                            <td><code>spchangeHometeam[].kelly</code></td>
+                            <td><code>array</code></td>
+                            <td>凯利值[主,客,平]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="footer">
+
+                <!--<div class="license">
+                    <p>版权声明 本页面中的内容已获得<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名3.0许可</a></p>
+                </div>-->
+
+
+                <div id="last-updated">Last updated Jan 12, 2015.</div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
