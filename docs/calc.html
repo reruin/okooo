@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>经费预算计算器</title>
+
+    <style type="text/css">
+        *{padding:0;margin:0;color:#333; font-family: 'microsoft yahei';font-size:14px;}
+        .item,li{ height:32px; margin:10px; line-height: 32px;}
+        input{ width:300px;height:32px;}
+        em{ font-style: normal; width:100px;float:left;}
+        li{list-style: none;display: block; width:100%;}
+        .result{border-top:1px solid #ccc; margin-top:25px;padding-top:25px;}
+    </style>
+    <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+    <div class="panel" id="field_input">
+
+    </div>
+    <div class="result">
+
+        <ul id="field_result">
+
+        </ul>
+    </div>
+</body>
+<script>
+
+    var calc = (function(){
+        var input_tpl = '<div class="item"><em>{title}</em><input placeholder="必填项 {title}" id="{id}" type="text"/></div>';
+        var result_tpl = '<li><em>{title}</em><strong id="res_{id}"></strong></li>';
+        var evt = 'oninput' in document.documentElement ? 'input' : 'propertychange';
+        var data = {}, calc_res = {};
+        var key = function(obj){
+            var k = [];
+            for(var i in obj){
+                k.push(i);
+            }
+            return k;
+        };
+
+        var replace = function(str,obj){
+            return str.replace(RegExp('(?:' + key(obj).join('|') + ')','g') , function(match){
+                return obj[match];
+            });
+        };
+
+        var template = function(str, data) {
+            return str.replace(/\{ *([\w_]+) *\}/g, function (str, key) {
+                var value = data[key];
+                if (value === undefined) {
+                    console.log('No value provided for variable ' + str);
+                    value = "{" + key + "}";
+                } else if (typeof value === 'function') {
+                    value = value(data);
+                }
+                return value;
+            })
+        };
+
+        //递归计算
+        function process(i , calc_res){
+            if(data[i].input === true){
+                var v = parseFloat( $('#'+i).val() );
+                calc_res[i] = v;
+                return;
+            }
+
+            var expr = data[i].expr;
+            var require = expr.match(/p\d+/g);
+
+            if(require){
+                for(var j in require){
+                    var key = require[j];
+                    if((key in calc_res) == false){
+                        process(key , calc_res);
+                    }
+                }
+            }
+
+            // 减负数时 出现 连减
+            expr = replace(expr , calc_res).replace(/--/g,'+');
+            var resp = eval( expr );
+
+            calc_res[i] = resp;
+        }
+
+        function render(){
+            var use = true;
+            var ins = $('#field_input input');
+
+            for(var i=0;i<ins.length ; i++){
+                if($(ins[i]).val() == ''){
+                    use = false;
+                    break;
+                }
+            }
+            calc_res = {};
+
+            if(use){
+                for(var i in data){
+                    if((i in calc_res) == false){
+                        console.log(i);
+                        console.log(calc_res)
+                        process( i , calc_res);
+                    }
+                    $('#res_'+i).html(calc_res[i].toFixed(4));
+                }
+            }
+        }
+
+        function init(v){
+            data = v;
+            var input = '', result = '';
+            for(var i in data){
+                data[i].id = i;
+                if(data[i].input === true)
+                    input += template(input_tpl , data[i]);
+                result += template(result_tpl , data[i]);
+            }
+            $('#field_input').html(input);
+            $('#field_result').html(result);
+
+            $('#field_input').on(evt , 'input' , function(){
+                render();
+            })
+        }
+
+        return {
+            'init':init
+        }
+    }());
+
+    $(function(){
+        var expr = {
+            'p1':{'title':'总经费' , 'input':true , 'expr':'p1'},
+            'p2':{'title':'直接经费' ,'expr':'p1-p4'},
+            'p3':{'title':'设备购置费' , 'input':true , 'expr':'p3'},
+            'p4':{'title':'间接经费' , 'expr':'(p1-p3)/6'},
+            'p5':{'title':'管理费','expr':'p4*0.75'},
+            'p6':{'title':'绩效支出','expr':'p4-p5'}
+        };
+        calc.init(expr);
+    })
+</script>
+</html>
