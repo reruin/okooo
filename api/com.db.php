@@ -109,7 +109,7 @@ class D
      * @return int
      * 返回值:插入的数据的ID 或者 0
      */
-    public function insert($data , $tostring = false)
+    public function insert($data , $tostring = false , $ignore = "")
     {
         $field = '';
         $idata = '';
@@ -126,6 +126,7 @@ class D
                 }
             }
             $sqlStr = "insert into $this->table($field) values ($idata)";
+
 
         } else {
             //非关联数组 或字符串
@@ -145,8 +146,12 @@ class D
             $sqlStr = "insert into $this->table values ($idata)";
 
         }
-        return $sqlStr;
-        if($tostring) { echo("ok");}
+
+        if($ignore!=""){
+            $sqlStr = $sqlStr . $ignore;
+        }
+
+        if($tostring) {  return $sqlStr; }
 
 
 		return $this->link->exec($sqlStr);
