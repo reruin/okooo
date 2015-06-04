@@ -112,7 +112,14 @@
                     $main = array();
 
                     $len = count($m[1]);
-                    for($i=12;$i<$len;$i=$i+12){
+                    $step = 12;
+                    // 超过 100条时，平均采样
+                    if($len>100*12){
+                        $step = 12 * ceil( ( $len/12 - 1) / 100 );
+                        if($step < 12) $step = 12;
+                    }
+
+                    for($i=12;$i<$len;$i=$i+$step){
                     //probability;
                         $t = $m[1];
                         if($i == 12 || $i == $len-12){
@@ -125,6 +132,11 @@
                             "kelly"=>array($t[$i+8] , $t[$i+9] , $t[$i+10]),
                             "payoff"=>$t[$i+11]
                         ));
+
+                        //大量数据 取插值，保证 初采集到
+                        if($i + $step > $len  && $i < $len - 12 && $step > 12){
+                            $i = $len - $step - 12;
+                        }
                     }
                 }
                 $all = json_encode($all);
