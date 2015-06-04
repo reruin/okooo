@@ -56,11 +56,11 @@ class D
      * @return array
      * 返回值:结果集 或 结果(出错返回空字符串)
      */
-    public function select($where = '1', $field = "*", $fun = '')
+    public function select($where = '1', $field = "*", $fun = '' , $and = "")
     {
         $rarr = array();
         if (empty($fun)) {
-            $sqlStr = "select $field from $this->table where $where";
+            $sqlStr = "select $field from $this->table where $where ".$and;
              $rt =  $this->link->query($sqlStr);
             while ($rt && $arr = $rt->fetch(PDO::FETCH_ASSOC)) {
                 array_push($rarr, $arr);
@@ -82,7 +82,7 @@ class D
      * @return bool
      * 返回值:语句执行成功或失败,执行成功并不意味着对数据库做出了影响
      */
-    public function update($where, $data)
+    public function update($where, $data, $tostring = false)
     {
         $ddata = '';
         if (is_array($data)) {
@@ -99,7 +99,8 @@ class D
         }
 		//echo($ddata);
         $sqlStr = "update $this->table set $ddata where $where";
-        return $this->link->exec($sqlStr);
+        if( $tostring ) return $sqlStr;
+        else return $this->link->exec($sqlStr);
     }
 
     /**

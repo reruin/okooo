@@ -42,6 +42,99 @@
 			logger::trace($resp[0]);
 		}
 
+        public function docalc(){
+
+            $model = json_decode($_REQUEST['model'] , true);
+
+            if($model){
+                $m = $model["odds"];
+                $calc = $model["calc"];
+
+                $where = "1=1";
+                $select = $model["bet"] ? $model["bet"] : "ave";
+                for($i=0;$i<count($m);$i++){
+
+                    $home = ($m[$i]["home"] && count($m[$i]["home"]) == 2) ? $m[$i]["home"] : array(0,99);
+                    $away = ($m[$i]["away"] && count($m[$i]["away"]) == 2) ? $m[$i]["away"] : array(0,99);
+                    $draw = ($m[$i]["draw"] && count($m[$i]["draw"]) == 2) ? $m[$i]["draw"] : array(0,99);
+                    $type = $m[$i]["type"];
+
+                    if(!$type){
+                        logger::error("error model , miss type");
+                        exit();
+                    }
+                    $where .= " and {$type}_start_home>={$home[0]} and {$type}_start_home<={$home[1]} and {$type}_start_away>={$away[0]} and {$type}_start_away<={$away[1]} and {$type}_start_draw>={$draw[0]} and {$type}_start_draw<={$draw[1]}";
+                    //if($r) $res = array_merge($res , $r);
+                }
+                $res = $this->db->select($where,"{$select}_start_home as h,{$select}_start_draw as d,{$select}_start_away as a,result as r");
+
+                $len = count($res);
+                $cost = 0; // 成本
+                $return = 0; //收益
+                for($i=0;$i<$len;$i++){
+                    //买负
+                    if(in_array(0 , $calc)){
+                       $cost++;
+                       if( $res[$i]["r"] == 0 ) $return += $res[$i]["a"];
+                    };
+
+                    //买平
+                    if(in_array(1 , $calc)){
+                       $cost++;
+                       if( $res[$i]["r"] == 1 ) $return += $res[$i]["d"];
+                    };
+
+                    //买胜
+                    if(in_array(2 , $calc)){
+                       $cost++;
+                       if( $res[$i]["r"] == 2 ) $return += $res[$i]["h"];
+                    };
+                }
+
+                $v = round(10000 * ($return-$cost) / $cost ) / 10000;
+                logger::success( json_encode(array(
+                    count=>$len,
+                    r=>$v
+                )) , true);
+            }else{
+                logger::error("error model");
+            }
+        }
+
+        public function doconv(){
+            $page = intval($_REQUEST['page']);
+            $type = $_REQUEST['type'];
+            $from = 1000 * $page;
+            $to = 1000;
+            //$sql = "select  m from soccer_match limit ".$from.",".$to;
+            $r = $this->db->select("1","match_id,".$type."_main as m","","limit ".$from.",".$to);
+            //echo($sql);
+            //print_r($r);
+
+            if($r){
+                $len = count($r);
+                $sql = "";
+                for($i = 0;$i<$len;$i++){
+                    $v = json_decode($r[$i]["m"] , true);
+                    $id = $r[$i]["match_id"];
+                    if(count($v) == 6){
+                        $sql = $sql . ($sql == "" ? "" :";") . $this->db->update( "match_id=".$id , array(
+                            $type."_start_home"=>$v[0],
+                            $type."_start_draw"=>$v[1],
+                            $type."_start_away"=>$v[2],
+                            $type."_end_home"=>$v[3],
+                            $type."_end_draw"=>$v[4],
+                            $type."_end_away"=>$v[5]
+                        ) , true);
+                    }
+
+                }
+                if($sql) $this->db->exec($sql);
+                logger::success("success");
+            }
+
+        }
+
         public function odds($type  , $match)
         {
             $url = "http://www.okooo.com/soccer/match/".$match."/odds/change/".$type."/";

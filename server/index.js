@@ -14,13 +14,13 @@ var config = {
     //'start':150,
     // 开赔公司
     'company':[
-        ['ave','24'],
-        ['williamhill','14'],
-        //['interwetten','43'],
-        //['ysb','35'],
-        //['ladbrokes','82'],
-        //['macau','84'],
-        ['oddset','18']
+        //['ave','24'],
+        //['williamhill','14'],
+        ['interwetten','43']
+        ['ysb','35'],
+        ['ladbrokes','82'],
+        ['macau','84'],
+        //['oddset','18']
     ]
 
 };
