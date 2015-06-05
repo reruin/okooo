@@ -61,6 +61,7 @@ class D
         $rarr = array();
         if (empty($fun)) {
             $sqlStr = "select $field from $this->table where $where ".$and;
+            //echo($sqlStr);
              $rt =  $this->link->query($sqlStr);
             while ($rt && $arr = $rt->fetch(PDO::FETCH_ASSOC)) {
                 array_push($rarr, $arr);

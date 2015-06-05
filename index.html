@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8" />
+    <meta name="author" content="reruin@gmail.com" />
+    <title>收益模型</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://static.hcharts.cn/highcharts/highcharts.js"></script>
+    <style type="text/css">
+        *{
+            font-family: 'microsoft yahei';list-style: none;padding:0;
+        }
+        span.remove{
+            color:#e74c3c;cursor: pointer;
+        }
+
+
+        li{margin: 6px 0;}
+
+        li select,li input{padding:5px;}
+
+       #j-condition , #j-model{
+           margin:15px;
+       }
+        #j-condition
+        {
+            border:1px solid #ccc; padding:15px;border-radius: 2px;
+        }
+        #j-condition h2{margin-top:0;color:#666;}
+        #j-condition a{ margin:0 5px; color:#39e; cursor: pointer;}
+
+        .bet,ul{
+            padding:8px;
+        }
+        .bet *{height:24px;line-height: 24px;display: inline-block;}
+        .bet a:before{
+            content:" ";
+            width:18px;height:18px;display: inline-block;
+            border-radius: 9px;
+            border: solid 2px #27ae60;
+            box-sizing: border-box;
+            position: relative;
+            top: 3px;
+            margin-right:2px;
+        }
+        .bet a.select:before{
+            padding:3px;background-color: #27ae60;
+        }
+        h3{
+            border-bottom: 1px dashed #ccc; font-size:16px;
+            padding:8px;
+        }
+
+        #j-result div{margin:10px 0;}
+
+        #j-calc{
+            width: 40%;
+            border: none;
+            background-color: #39e;
+            color: #fff;
+            padding: 10px;
+            margin: 0 30%;
+        }
+    </style>
+</head>
+<body>
+    <div id="j-condition">
+        <h2>可选条件</h2>
+        <a rel="range">区间</a>
+        <a rel="compare">运算</a>
+
+        <!--<h2>高级查询</h2>
+        <a rel="range">变动</a>-->
+    </div>
+    <div class="panel" id="j-model">
+        <div class="item">
+            <h3>下注</h3>
+            <div class="bet">
+                <select>
+                    <option value="ave" selected>百家</option>
+                    <option value="williamhill">williamhill</option>
+                    <option value="oddset">oddset</option>
+                </select>
+                <select>
+                    <option value="_start" selected>初始</option>
+                    <option value="_end">最终</option>
+                </select>
+                <a data-id="2" class="select">胜</a>
+                <a data-id="0">负</a>
+                <a data-id="1">平</a>
+            </div>
+            <h3>条件</h3>
+            <ul></ul>
+        </div>
+        <div id="j-result">
+            <h3>结果</h3>
+            <div>比赛场数: <span id="j-num"></span></div>
+            <div>模型收益: <span id="j-return"></span></div>
+        </div>
+        <button id="j-calc">计算</button>
+
+    </div>
+
+    <template id="bet">
+
+    </template>
+
+    <template id="range">
+        <span class="remove">删</span>
+        <select class="company">
+            <option value="ave" selected>百家</option>
+            <option value="williamhill">williamhill</option>
+            <option value="oddset">oddset</option>
+        </select>
+        <select>
+            <option value="_start" selected>初始</option>
+            <option value="_end">最终</option>
+        </select>
+        <select>
+            <option value="_home" selected>主赔</option>
+            <option value="_away">负赔</option>
+            <option value="_draw">平赔</option>
+        </select>
+        <select>
+            <option value=">" >> </option>
+            <option value=">=">>=</option>
+            <option value="=" selected>= </option>
+            <option value="<" >< </option>
+            <option value="<="><=</option>
+            <option value="!=">!=</option>
+        </select>
+        <input type="text" value="0" />
+    </template>
+
+    <template id="compare">
+        <span class="remove">删</span>
+        <select class="company">
+            <option value="ave" selected>百家</option>
+            <option value="williamhill">williamhill</option>
+            <option value="oddset">oddset</option>
+        </select>
+        <select>
+            <option value="_start" selected>初始</option>
+            <option value="_end">最终</option>
+        </select>
+        <select>
+            <option value="_home" selected>主赔</option>
+            <option value="_away">负赔</option>
+            <option value="_draw">平赔</option>
+        </select>
+        <select>
+            <option value="-" selected>-</option>
+            <option value="+">+</option>
+            <option value="*" >x</option>
+            <option value="/" >/</option>
+        </select>
+        <select class="company">
+            <option value="ave" selected>百家</option>
+            <option value="williamhill">williamhill</option>
+            <option value="oddset">oddset</option>
+        </select>
+        <select>
+            <option value="_start" selected>初始</option>
+            <option value="_end">最终</option>
+        </select>
+        <select>
+            <option value="_home" selected>主赔</option>
+            <option value="_away">负赔</option>
+            <option value="_draw">平赔</option>
+        </select>
+        <select>
+            <option value=">" selected>> </option>
+            <option value=">=">>=</option>
+            <option value="=" >= </option>
+            <option value="<" >< </option>
+            <option value="<="><=</option>
+        </select>
+        <input type="text" value="0" />
+    </template>
+</body>
+<script type="text/javascript">
+
+    var app = (function(){
+        function joinkey(el , fn , args , tonumber){
+            if(!fn) fn = "val";
+            var arr = [];
+            for(var i=0;i<el.length;i++){
+                if(fn == 'attr')
+                    arr[i] = $(el[i]).attr(args);
+                else
+                    arr[i] = $(el[i])[fn]();
+                if(tonumber){arr[i] = parseFloat(arr[i]);}
+
+            }
+            return arr;
+        }
+
+        function init(){
+            $('#j-condition').on('click' , 'a' , function(){
+                var m = $(this).attr('rel');
+                var h = "<li>" + $('#'+m).html() + "</li>";
+                $('#j-model ul').append(h);
+            })
+
+            $('body').on('click' , 'span.remove' , function(){
+                $(this).parent().remove();
+            })
+
+            $('#j-calc').on('click' , function(){
+                calc();
+            })
+
+            $('body').on('click' , '.bet a' , function(){
+                $(this).toggleClass('select');
+            })
+        }
+
+        function calc(){
+            var con = $('#j-model li');
+            var sql = "1 = 1";
+            for(var i=0;i<con.length ; i++){
+                var el = $(con[i]).find('select,input');
+                var seg = "";
+                for(var j = 0 ;j<el.length ; j++){
+                    seg += $(el[j]).val();
+                }
+                sql += ' and ' + seg;
+            }
+
+            var con = $('#j-model .bet');
+            var sele = joinkey(con.find('select')).join('');
+            var bet = joinkey(con.find('a.select') , "attr" , "data-id").join('');
+
+            $.getJSON('http://c.soullab.info:803/okooo/api/?m=model&a=calc',{
+                'where':sql,
+                'bet':bet,
+                'select':sele
+            },function(d){
+                //$('#j-result').html( JSON.stringify(d) );
+                $('#j-return').html(d.detail.r);
+                $('#j-num').html(d.detail.count);
+            })
+
+        }
+
+        return {
+            'init' : init
+        }
+    }())
+
+    $(function(){
+        app.init();
+    })
+
+</script>
+</html>

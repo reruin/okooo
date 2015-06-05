@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8" />
+    <meta name="author" content="reruin@gmail.com" />
+    <title>统计</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://static.hcharts.cn/highcharts/highcharts.js"></script>
+    <style type="text/css">
+        *{
+            font-family: 'microsoft yahei';list-style: none;padding:0;
+            text-decoration:none;
+        }
+        span.remove{
+            color:#e74c3c;cursor: pointer;
+        }
+
+
+        a.option{ color:#27ae60;font-weight: bold; cursor: pointer;}
+
+        li{margin: 6px 0;}
+
+        li select,li input{padding:5px;}
+
+        header , #j-model{
+            margin:15px;
+        }
+        header
+        {
+            border:1px solid #ccc; padding:15px;border-radius: 2px;
+        }
+        header h2{margin-top:0;color:#666;}
+        header a{ margin:0 5px; color:#39e; cursor: pointer;}
+
+        .bet,.order ,ul{
+            padding:8px;
+        }
+        .bet *{height:24px;line-height: 24px;display: inline-block;}
+        .bet a:before{
+            content:" ";
+            width:18px;height:18px;display: inline-block;
+            border-radius: 9px;
+            border: solid 2px #27ae60;
+            box-sizing: border-box;
+            position: relative;
+            top: 3px;
+            margin-right:2px;
+        }
+        .bet a.select:before{
+            padding:3px;background-color: #27ae60;
+        }
+        h3{
+            border-bottom: 1px dashed #ccc; font-size:16px;
+            padding:8px;
+        }
+
+
+        #j-result div{margin:10px 0;}
+
+        #j-calc{
+            width: 40%;
+            border: none;
+            background-color: #39e;
+            color: #fff;
+            padding: 10px;
+            margin: 0 30%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h2>统计分析</h2>
+</header>
+<div class="panel" id="j-model">
+    <div class="item">
+        <h3>统计项目 <a class="option" data-for="j-order" rel="statistics-item">+</a></h3>
+        <ul id="j-order"></ul>
+        <h3>
+            <span>条件</span>
+            <a class="option" data-for="j-condition" rel="range">区间</a>
+            <a class="option" data-for="j-condition" rel="compare">运算</a>
+            <a class="option" data-for="j-condition" rel="result">赛果</a>
+        </h3>
+        <ul id="j-condition"></ul>
+    </div>
+
+    <button id="j-calc">计算</button>
+    <div id="j-result">
+
+    </div>
+</div>
+
+<template id="statistics-item">
+    <span class="remove">删</span>
+    <select>
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="oddset">oddset</option>
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>主赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+</template>
+
+<template id="result">
+    <span class="remove">删</span>
+    <select>
+        <option value="result=2" selected>胜</option>
+        <option value="result=0">负</option>
+        <option value="result=1">平</option>
+    </select>
+</template>
+
+<template id="range">
+    <span class="remove">删</span>
+    <select class="company">
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="oddset">oddset</option>
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>主赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+    <select>
+        <option value=">" >> </option>
+        <option value=">=">>=</option>
+        <option value="=" selected>= </option>
+        <option value="<" >< </option>
+        <option value="<="><=</option>
+        <option value="!=">!=</option>
+    </select>
+    <input type="text" value="0" />
+</template>
+
+<template id="compare">
+    <span class="remove">删</span>
+    <select class="company">
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="oddset">oddset</option>
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>主赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+    <select>
+        <option value="-" selected>-</option>
+        <option value="+">+</option>
+        <option value="*" >x</option>
+        <option value="/" >/</option>
+    </select>
+    <select class="company">
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="oddset">oddset</option>
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>主赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+    <select>
+        <option value=">" selected>> </option>
+        <option value=">=">>=</option>
+        <option value="=" >= </option>
+        <option value="<" >< </option>
+        <option value="<="><=</option>
+    </select>
+    <input type="text" value="0" />
+</template>
+
+</body>
+<script type="text/javascript">
+
+    var app = (function(){
+        function joinkey(el , fn , args , tonumber){
+            if(!fn) fn = "val";
+            var arr = [];
+            for(var i=0;i<el.length;i++){
+                if(fn == 'attr')
+                    arr[i] = $(el[i]).attr(args);
+                else
+                    arr[i] = $(el[i])[fn]();
+                if(tonumber){arr[i] = parseFloat(arr[i]);}
+
+            }
+            return arr;
+        }
+
+        function init(){
+            $('body').on('click' , 'a.option' , function(){
+                var m = $(this).attr('rel');
+                var target = $(this).attr('data-for');
+                var h = "<li>" + $('#'+m).html() + "</li>";
+                $('#' + target).append(h);
+            })
+
+            $('body').on('click' , 'span.remove' , function(){
+                $(this).parent().remove();
+            })
+
+            $('#j-calc').on('click' , function(){
+                calc();
+            })
+
+            $('body').on('click' , '.bet a' , function(){
+                $(this).toggleClass('select');
+            })
+        }
+
+        function calc(){
+            var con = $('#j-condition li');
+            var sql = "1 = 1";
+            for(var i=0;i<con.length ; i++){
+                var el = $(con[i]).find('select,input');
+                var seg = "";
+                for(var j = 0 ;j<el.length ; j++){
+                    seg += $(el[j]).val();
+                }
+                sql += ' and ' + seg;
+            }
+
+            con = $("#j-order li");
+            var order = [];
+            for(var i=0;i<con.length ; i++){
+                order.push( joinkey( $(con[i]).find('select') ).join('') );
+            }
+            order = order.join(',');
+
+            $.getJSON('http://c.soullab.info:803/okooo/api/?m=model&a=get',{
+                'where':sql,
+                'order':order
+            },function(d){
+                //$('#j-result').html( JSON.stringify(d) );
+                if(d.status == 0){
+                    draw(d.detail);
+                }
+            })
+
+        }
+
+        //数据整理, 5% 以上概率值
+        function coll(d){
+            var ya = [], count = 0;
+
+            for(var i in d){
+                if(d[i].v != 'null' && d[i].v != null){
+                    var cur = parseInt(d[i].c)
+                    count += cur;
+
+                    var v = parseFloat(parseFloat(d[i].v).toFixed(1)) * 10;
+                    if(v > 99) v = 99;
+                    if(ya[v] === undefined) ya[v] = 0;
+                    ya[v] = ya[v] + cur;
+                }
+
+            }
+
+            for(var i=0;i<100;i++){
+                if(ya[i] === undefined) ya[i] = 0;
+                else ya[i] = Math.round((100 * ya[i] / count)*100)/100;
+            }
+
+            return ya;
+        }
+        function draw(d){
+            var al = coll(d);
+            console.log(al)
+            var obj = {
+                chart: { type: 'area' },
+                title: { text: '概率分布' },
+                /*xAxis: { categories:al[0] ,
+                    min:0,
+                    labels:{
+                        step:10
+                    }
+                },*/
+                yAxis: {
+                    title: { text: '概率分布(%)' }
+                },
+                tooltip: { formatter:function(){ return this.y +'% 概率 出现 '+ this.x.toFixed(2);} },
+                plotOptions: {
+                    area: {
+                        pointStart: 0,pointInterval:0.1,
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 1,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'USA',
+                    data: al
+                }]
+            }
+
+            $('#j-result').highcharts(obj);
+        }
+        return {
+            'init' : init
+        }
+    }())
+
+    $(function(){
+        app.init();
+    })
+
+</script>
+</html>
