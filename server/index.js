@@ -11,15 +11,17 @@ var config = {
     'odds':'http://localhost:803/api/?m=soccer&a=odds',
 
     //'odds_off':true,
-    //'start':150,
+    'start':1,
+    len : 160,
     // 开赔公司
     'company':[
         //['ave','24'],
         //['williamhill','14'],
         ['interwetten','43']
-        ['ysb','35'],
-        ['ladbrokes','82'],
-        ['macau','84'],
+        //['ysb','35'],
+        //['ladbrokes','82'],
+        //['bet365','27']
+        //['macau','84'],
         //['oddset','18']
     ]
 

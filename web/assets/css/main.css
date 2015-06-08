@@ -1,0 +1,109 @@
+*{
+    font-family: 'microsoft yahei';list-style: none;padding:0;
+    text-decoration:none;
+}
+
+template{display:none;}
+span.left,
+span.remove{
+    color: #fff;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background: #e74c3c;
+    border-radius: 9px;
+    line-height: 18px;
+    text-align: center;
+    font-size: 18px;
+    position: absolute;
+    top:-18px;
+    right:0px;
+}
+span.left{
+    right:20px;
+    background-color: #27ae60;
+}
+
+a.option{ color:#27ae60;font-weight: bold; cursor: pointer;}
+
+li{margin: 5px; border:1px solid #aaa;position: relative;}
+
+li select,li input{padding:5px 0;}
+select{border:none;}
+textarea{width:500px;height:150px;}
+header
+{
+    border:1px solid #ccc; padding:15px;border-radius: 2px;
+}
+header h2{margin-top:0;color:#666;}
+header a{ margin:0 5px; color:#39e; cursor: pointer;}
+
+#j-model>li{
+    box-shadow: 0 0 5px 1px #ddd;
+    padding: 10px;border:none;margin-top:20px;
+}
+
+.bet,.order ,ul{
+    padding:8px;
+}
+.checkbox *{height:24px;line-height: 24px;display: inline-block;}
+.checkbox a:before{
+    content:" ";
+    width:18px;height:18px;display: inline-block;
+    /*border-radius: 9px;*/
+    border: solid 2px #27ae60;
+    box-sizing: border-box;
+    position: relative;
+    top: 3px;
+    margin-right:2px;
+}
+.checkbox a.select:before{
+    padding:3px;background-color: #27ae60;
+}
+h3{
+    border-bottom: 1px dashed #ccc; font-size:16px;
+    padding:8px;
+}
+
+#j-result{border-top:2px solid #ccc;margin-top:25px;}
+#j-result div{margin:10px 0;}
+#j-result em{ font-size:12px; color:#955;}
+#j-calc{
+    width: 40%;
+    border: none;
+    background-color: #39e;
+    color: #fff;
+    padding: 10px;
+    margin: 0 30%;
+}
+
+.j-condition li,#j-order li{display:inline-block;}
+
+/* loading */
+
+.loading{
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    top:50%;left:50%;margin-left: -32px;margin-top:-32px;
+}
+
+.loading.circle{
+    border-radius: 32px;
+    -webkit-box-sizing: border-box;
+    border: solid 6px rgba(0,0,0,0.2);
+    border-top-color: transparent;
+    -webkit-animation: spin 1s infinite linear;
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}

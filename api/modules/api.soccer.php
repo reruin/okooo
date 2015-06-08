@@ -233,8 +233,21 @@
                     }
                 }
                 $all = json_encode($all);
+                $save_field = array(
+                    $field=>$all ,
+                    $field."_main"=>"[".implode(",",$main)."]"
+                );
+                if(count($main) == 6){
+                    $save_field[$field."_start_home"] = $main[0];
+                    $save_field[$field."_start_draw"] = $main[1];
+                    $save_field[$field."_start_away"] =$main[2];
+                    $save_field[$field."_end_home"] = $main[3];
+                    $save_field[$field."_end_draw"] = $main[4];
+                    $save_field[$field."_end_away"] = $main[5];
+                }
+
                 if($save){
-                    $this->db->update('match_id='.$match , array($field=>$all , $field."_main"=>"[".implode(",",$main)."]"));
+                    $this->db->update('match_id='.$match , $save_field);
                     logger::success("success");
                 }else{
                     logger::success($all , true);

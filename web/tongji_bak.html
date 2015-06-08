@@ -80,6 +80,10 @@
             <a class="option" data-for="j-condition" rel="range">区间</a>
             <a class="option" data-for="j-condition" rel="compare">运算</a>
             <a class="option" data-for="j-condition" rel="result">赛果</a>
+            <a class="option" data-for="j-condition" rel="time">时间</a>
+            <a class="option" data-for="j-condition" rel="league">联赛</a>
+            <a class="option" data-for="j-condition" rel="team-home">主队</a>
+            <a class="option" data-for="j-condition" rel="team-away">客队</a>
         </h3>
         <ul id="j-condition"></ul>
     </div>
@@ -102,10 +106,68 @@
         <option value="_end">最终</option>
     </select>
     <select>
-        <option value="_home" selected>主赔</option>
+        <option value="_home" selected>胜赔</option>
         <option value="_away">负赔</option>
         <option value="_draw">平赔</option>
     </select>
+</template>
+
+<template id="team-home">
+    <span class="remove">删</span>
+    <span>主队</span>
+    <input type="hidden" value="home"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="text"/>
+    <input type="hidden" value="'"/>
+</template>
+
+<template id="team-away">
+    <span class="remove">删</span>
+    <span>客队</span>
+
+    <input type="hidden" value="away"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="text"/>
+    <input type="hidden" value="'"/>
+</template>
+
+<template id="league">
+    <span class="remove">删</span>
+
+    <input type="hidden" value="type"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <select>
+        <option value="德甲" >德甲</option>
+    </select>
+    <input type="hidden" value="'"/>
+</template>
+<template id="time">
+    <span class="remove">删</span>
+
+    <input type="hidden" value="match_time"/>
+    <select>
+        <option value=">" >晚于</option>
+        <option value=">=">晚于(包括当天)</option>
+        <option value="=" selected>等于</option>
+        <option value="<" >早于</option>
+        <option value="<=">早于(包括当天)</option>
+        <option value="!=">不等于</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="date" />
+    <input type="hidden" value="'"/>
 </template>
 
 <template id="result">
@@ -129,7 +191,7 @@
         <option value="_end">最终</option>
     </select>
     <select>
-        <option value="_home" selected>主赔</option>
+        <option value="_home" selected>胜赔</option>
         <option value="_away">负赔</option>
         <option value="_draw">平赔</option>
     </select>
@@ -156,7 +218,7 @@
         <option value="_end">最终</option>
     </select>
     <select>
-        <option value="_home" selected>主赔</option>
+        <option value="_home" selected>胜赔</option>
         <option value="_away">负赔</option>
         <option value="_draw">平赔</option>
     </select>
@@ -176,7 +238,7 @@
         <option value="_end">最终</option>
     </select>
     <select>
-        <option value="_home" selected>主赔</option>
+        <option value="_home" selected>胜赔</option>
         <option value="_away">负赔</option>
         <option value="_draw">平赔</option>
     </select>
@@ -212,7 +274,7 @@
             $('body').on('click' , 'a.option' , function(){
                 var m = $(this).attr('rel');
                 var target = $(this).attr('data-for');
-                var h = "<li>" + $('#'+m).html() + "</li>";
+                var h = "<li>" + $('#'+m).html() + "<a class='j-or'>且</a></li>";
                 $('#' + target).append(h);
             })
 
@@ -227,6 +289,7 @@
             $('body').on('click' , '.bet a' , function(){
                 $(this).toggleClass('select');
             })
+
         }
 
         function calc(){
@@ -246,63 +309,63 @@
             for(var i=0;i<con.length ; i++){
                 order.push( joinkey( $(con[i]).find('select') ).join('') );
             }
-            order = order.join(',');
 
-            $.getJSON('http://c.soullab.info:803/okooo/api/?m=model&a=get',{
+            $.getJSON('/api/?m=model&a=get',{
                 'where':sql,
-                'order':order
+                'order':JSON.stringify(order)
             },function(d){
                 //$('#j-result').html( JSON.stringify(d) );
+                //console.log(d)
                 if(d.status == 0){
-                    draw(d.detail);
+                    draw(d.detail , order);
                 }
             })
 
         }
 
-        //数据整理, 5% 以上概率值
-        function coll(d){
-            var ya = [], count = 0;
-
-            for(var i in d){
-                if(d[i].v != 'null' && d[i].v != null){
-                    var cur = parseInt(d[i].c)
+        //数据整理
+        function coll(data , order){
+            var yas = [], count;
+            var l = order.length;
+            for(var j =0 ;j<l ; j++){
+                var d = data[j];
+                var ya = [];
+                var count = 0;
+                for(var i in d){
+                    var cur = parseInt(d[i].c);
                     count += cur;
+                    if(d[i].v != 'null' && d[i].v != null){
 
-                    var v = parseFloat(parseFloat(d[i].v).toFixed(1)) * 10;
-                    if(v > 99) v = 99;
-                    if(ya[v] === undefined) ya[v] = 0;
-                    ya[v] = ya[v] + cur;
+                        var v = parseFloat(parseFloat(d[i].v).toFixed(1)) * 10;
+                        if(v > 99) v = 99;
+                        if(ya[v] === undefined) ya[v] = 0;
+                        ya[v] = ya[v] + cur;
+                    }
+
                 }
+                for(var i=0;i<100;i++){
+                    if(ya[i] === undefined) ya[i] = 0;
+                    else ya[i] = Math.round((100 * ya[i] / count)*100)/100;
+                }
+                yas[j] = {"name":order[j] , "data":ya};
 
             }
 
-            for(var i=0;i<100;i++){
-                if(ya[i] === undefined) ya[i] = 0;
-                else ya[i] = Math.round((100 * ya[i] / count)*100)/100;
-            }
-
-            return ya;
+            return yas;
         }
-        function draw(d){
-            var al = coll(d);
+        function draw(d , a){
+            var al = coll(d , a);
             console.log(al)
             var obj = {
-                chart: { type: 'area' },
+                chart: { type: 'area' , zoomType:"x" },
                 title: { text: '概率分布' },
-                /*xAxis: { categories:al[0] ,
-                    min:0,
-                    labels:{
-                        step:10
-                    }
-                },*/
                 yAxis: {
                     title: { text: '概率分布(%)' }
                 },
                 tooltip: { formatter:function(){ return this.y +'% 概率 出现 '+ this.x.toFixed(2);} },
                 plotOptions: {
                     area: {
-                        pointStart: 0,pointInterval:0.1,
+                        /*pointStart: 0,*/pointInterval:0.1,
                         marker: {
                             enabled: false,
                             symbol: 'circle',
@@ -315,10 +378,7 @@
                         }
                     }
                 },
-                series: [{
-                    name: 'USA',
-                    data: al
-                }]
+                series: al
             }
 
             $('#j-result').highcharts(obj);

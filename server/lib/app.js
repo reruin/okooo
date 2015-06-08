@@ -127,7 +127,7 @@ function getMatches(date , fn)
 {
     logger.info('Start Crawl \n');
     timer = Date.now();
-    getJson(config.match + "&date="+date, function(resp){
+    getJson(config.match + "&save=true&date="+date, function(resp){
         var d = resp.detail, len = d.length , i = 0;
         logger.info('Get matches list : '+len);
         var process = function(){
@@ -198,7 +198,7 @@ function main2(){
 
 function main(){
 
-    var len = 365, i = config.start || 1, now;
+    var len = config.len || 365, i = config.start || 0, now;
     var process = function(){
         now = utils.before(i);
         logger.info('load date : ' + now);

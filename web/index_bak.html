@@ -61,6 +61,8 @@
             padding: 10px;
             margin: 0 30%;
         }
+
+        input{width:25px;}
     </style>
 </head>
 <body>
@@ -117,7 +119,7 @@
             <option value="_end">最终</option>
         </select>
         <select>
-            <option value="_home" selected>主赔</option>
+            <option value="_home" selected>胜赔</option>
             <option value="_away">负赔</option>
             <option value="_draw">平赔</option>
         </select>
@@ -144,7 +146,7 @@
             <option value="_end">最终</option>
         </select>
         <select>
-            <option value="_home" selected>主赔</option>
+            <option value="_home" selected>胜赔</option>
             <option value="_away">负赔</option>
             <option value="_draw">平赔</option>
         </select>
@@ -164,7 +166,7 @@
             <option value="_end">最终</option>
         </select>
         <select>
-            <option value="_home" selected>主赔</option>
+            <option value="_home" selected>胜赔</option>
             <option value="_away">负赔</option>
             <option value="_draw">平赔</option>
         </select>
@@ -231,14 +233,14 @@
             var sele = joinkey(con.find('select')).join('');
             var bet = joinkey(con.find('a.select') , "attr" , "data-id").join('');
 
-            $.getJSON('http://c.soullab.info:803/okooo/api/?m=model&a=calc',{
+            $.getJSON('api/?m=model&a=calc',{
                 'where':sql,
                 'bet':bet,
                 'select':sele
             },function(d){
                 //$('#j-result').html( JSON.stringify(d) );
                 $('#j-return').html(d.detail.r);
-                $('#j-num').html(d.detail.count);
+                $('#j-num').html(d.detail.count+"("+ (d.detail.p*100).toFixed(2) +"%)");
             })
 
         }

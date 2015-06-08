@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="author" content="reruin@gmail.com" />
+    <title>统计</title>
+    <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://static.hcharts.cn/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/ui.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+
+</head>
+<body>
+<header>
+    <h2>统计</h2>
+</header>
+<section class="panel">
+    <div class="item">
+        <h3>统计项目 <a class="option" data-for="#j-order" rel="statistics-item">+</a></h3>
+        <ul id="j-order"></ul>
+        <h3>
+            <span>条件</span>
+
+            <a class="option" data-for="j-condition" rel="operator">运算符</a>
+
+            <a class="option" data-for="j-condition" rel="input-number">数字</a>
+            <a class="option" data-for="j-condition" rel="input-string">字符</a>
+
+            <span>|</span>
+            <a class="option" data-for="j-condition" rel="odds">赔率</a>
+            <a class="option" data-for="j-condition" rel="result">赛果</a>
+            <a class="option" data-for="j-condition" rel="time">时间</a>
+            <a class="option" data-for="j-condition" rel="league">联赛</a>
+            <a class="option" data-for="j-condition" rel="team-home">主队</a>
+            <a class="option" data-for="j-condition" rel="team-away">客队</a>
+            <span>|</span>
+            <a class="option" data-for="j-condition" rel="operator-logical">逻辑</a>
+            <span>|</span>
+            <a class="option" data-for="j-condition" rel="operator-area">表达式</a>
+        </h3>
+        <ul class="j-condition"></ul>
+    </div>
+
+    <button id="j-calc" rel="analyse">计算</button>
+    <div id="j-result">
+
+    </div>
+</section>
+
+<template id="t-input-number">
+    <input type="text"/>
+</template>
+<template id="t-input-string">
+
+    <input type="hidden" value="'"/>
+    <input type="text"/>
+    <input type="hidden" value="'"/>
+</template>
+<template id="t-operator">
+    <select>
+        <!--<option value="">--</option>-->
+        <option value="(">(</option>
+        <option value=")">)</option>
+        <!--<option value="">--</option>-->
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">x</option>
+        <option value="/">/</option>
+        <!--<option value="" >--</option>-->
+        <option value=">" >> </option>
+        <option value=">=">>=</option>
+        <option value="=" selected>= </option>
+        <option value="<" >< </option>
+        <option value="<="><=</option>
+        <option value="!=">!=</option>
+        <!--<option value="" >--</option>-->
+        <option value=" and ">且</option>
+        <option value=" or ">或</option>
+    </select>
+</template>
+
+<template id="t-operator-area">
+    <textarea></textarea>
+</template>
+
+<template id="t-operator-logical">
+    <select>
+        <option value=" and " selected>且</option>
+        <option value=" or ">或</option>
+    </select>
+</template>
+
+
+<template id="t-statistics-item">
+
+    <select>
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="ladbrokes">立博</option>
+        <option value="bet365">bet365</option>
+        <option value="oddset">oddset</option>
+        <option value="interwetten">interwetten</option>
+
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>胜赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+</template>
+
+<template id="t-team-home">
+
+    <span>主队</span>
+    <input type="hidden" value="home"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="text"/>
+    <input type="hidden" value="'"/>
+</template>
+
+<template id="t-team-away">
+
+    <span>客队</span>
+
+    <input type="hidden" value="away"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="text"/>
+    <input type="hidden" value="'"/>
+</template>
+
+<template id="t-league">
+
+    <input type="hidden" value="type"/>
+    <select>
+        <option value="=" >是</option>
+        <option value="!=">不是</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <select>
+        <option value="德甲" >德甲</option>
+    </select>
+    <input type="hidden" value="'"/>
+</template>
+<template id="t-time">
+
+
+    <input type="hidden" value="match_time"/>
+    <select>
+        <option value=">" >晚于</option>
+        <option value=">=">晚于(包括当天)</option>
+        <option value="=" selected>等于</option>
+        <option value="<" >早于</option>
+        <option value="<=">早于(包括当天)</option>
+        <option value="!=">不等于</option>
+    </select>
+    <input type="hidden" value="'"/>
+    <input type="date" />
+    <input type="hidden" value="'"/>
+</template>
+
+<template id="t-result">
+
+    <select>
+        <option value="result=2" selected>胜</option>
+        <option value="result=0">负</option>
+        <option value="result=1">平</option>
+    </select>
+</template>
+
+<template id="t-odds">
+
+    <select class="company">
+        <option value="ave" selected>百家</option>
+        <option value="williamhill">williamhill</option>
+        <option value="ladbrokes">立博</option>
+        <option value="bet365">bet365</option>
+        <option value="oddset">oddset</option>
+        <option value="interwetten">interwetten</option>
+
+    </select>
+    <select>
+        <option value="_start" selected>初始</option>
+        <option value="_end">最终</option>
+    </select>
+    <select>
+        <option value="_home" selected>胜赔</option>
+        <option value="_away">负赔</option>
+        <option value="_draw">平赔</option>
+    </select>
+
+</template>
+
+
+</body>
+<script type="text/javascript">
+
+    $(function(){
+        app.init();
+    })
+
+</script>
+</html>
