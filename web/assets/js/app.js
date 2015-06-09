@@ -124,34 +124,41 @@ var app = (function(){
      * @param a：类型数字
      */
     function draw(d , a){
-        var al = coll(d , a);
-        console.log(al)
-        var obj = {
-            chart: { type: 'area' , zoomType:"x" },
-            title: { text: '概率分布' },
-            yAxis: {
-                title: { text: '概率分布(%)' }
-            },
-            //tooltip: { formatter:function(){ return this.y +'% 概率 出现 '+ this.x.toFixed(2);} },
-            plotOptions: {
-                area: {
-                    /*pointStart: 0,*/pointInterval:0.1,
-                    marker: {
-                        enabled: false,
-                        symbol: 'circle',
-                        radius: 1,
-                        states: {
-                            hover: {
-                                enabled: true
+        var al = coll(d.data , a);
+        console.log(al);
+
+        $('#j-result').empty();
+
+        //for(var i in al){
+            var obj = {
+                chart: { type: 'area' , zoomType:"x" },
+                title: { text: '概率分布' },
+                yAxis: {
+                    title: { text: '概率分布(%)' }
+                },
+                //tooltip: { formatter:function(){ return this.y +'% 概率 出现 '+ this.x.toFixed(2);} },
+                plotOptions: {
+                    area: {
+                        /*pointStart: 0,*/pointInterval:0.1,
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 1,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
                             }
                         }
                     }
-                }
-            },
-            series: al
-        }
+                },
+                series: al
+            }
+            var a = $('<div>');
+            $('#j-result').append(a);
+            a.highcharts(obj);
+        //}
 
-        $('#j-result').highcharts(obj);
     }
 
     /**

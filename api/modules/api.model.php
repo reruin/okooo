@@ -60,20 +60,23 @@
             $where = $_REQUEST["where"];
             $order = json_decode( $_REQUEST["order"] );
 
-            $arr = array();
+            $arr = array();$rate = array();
             for($i = 0 ; $i < count($order); $i++ ){
-                $res = $this->db->select("{$where} group by v order by v asc","count(*) as c, {$order[$i]} as v");
+                $res = $this->db->select("{$where} and result>=0 group by v order by v asc","count(match_id) as c,sum(result=2) as h,sum(result=1) as d,sum(result=0) as a, {$order[$i]} as v");
                 array_push($arr , $res);
+                //array_push($rate , );
             }
-
-            logger::success( json_encode($arr) , true);
+            $rate = $this->db->select("{$where} and result>=0 and ave_start_home>=1 group by ave_start_home order by ave_start_home asc","count(result) as c , result,ave_start_home as odds");
+            logger::success( json_encode(array(
+                "data"=>$arr
+            )) , true);
         }
 
         public function dostatistics()
         {
             $where = $_REQUEST["where"];
             $order = $_REQUEST["order"];
-            $res = $this->db->select("{$where} group by {$order} order by v asc","count(*) as c,{$order} as v");
+            $res = $this->db->select("{$where} and result>=0 group by {$order} order by v asc","count(*) as c,{$order} as v");
             logger::success( json_encode($res) , true);
         }
 
@@ -83,7 +86,7 @@
             $bet = json_decode( $_REQUEST["bet"] ,true);
             $res = json_decode( $_REQUEST["result"] , true);
 
-            $count = $this->db->select("1=1","count(*) as c")[0]["c"];
+            $count = $this->db->select("result>=0","count(*) as c")[0]["c"];
 
             $arr = array();
             if(count($where) == count($bet) && count($bet) == count($res)){

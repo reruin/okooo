@@ -38,6 +38,8 @@
             <span>|</span>
             <a class="option" data-for="j-condition" rel="operator-logical">逻辑</a>
             <span>|</span>
+            <a class="option" data-for="j-condition" rel="league-main">五大联赛</a>
+            <span>|</span>
             <a class="option" data-for="j-condition" rel="operator-area">表达式</a>
         </h3>
         <ul class="j-condition"></ul>
@@ -142,6 +144,13 @@
     <input type="hidden" value="'"/>
 </template>
 
+<template id="t-league-main">
+    <select>
+        <option value="(type='德甲' or type='法甲' or type='意甲' or type='英超' or type='西甲')" selected>五大联赛以内</option>
+        <option value="(type!='德甲' and type!='法甲' and type!='意甲' and type!='英超' and type!='西甲')" >五大联赛以外</option>
+    </select>
+</template>
+
 <template id="t-league">
 
     <input type="hidden" value="type"/>
@@ -151,13 +160,17 @@
     </select>
     <input type="hidden" value="'"/>
     <select>
-        <option value="德甲" >德甲</option>
+        <option value="德甲" selected>德甲</option>
+        <option value="法甲" >法甲</option>
+        <option value="意甲" >意甲</option>
+        <option value="英超" >英超</option>
+        <option value="西甲" >西甲</option>
+        <option value="J2联赛" >J2联赛</option>
     </select>
     <input type="hidden" value="'"/>
 </template>
+
 <template id="t-time">
-
-
     <input type="hidden" value="match_time"/>
     <select>
         <option value=">" >晚于</option>
