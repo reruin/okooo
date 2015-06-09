@@ -134,9 +134,35 @@ var app = (function(){
             var obj = {
                 chart: { type: 'area' , zoomType:"x" },
                 title: { text: '概率分布' },
-                yAxis: {
-                    title: { text: '概率分布(%)' }
-                },
+                yAxis: [{
+                            labels: {
+                                formatter: function () {
+                                    return this.value + '%';
+                                }
+                            },
+                            title: {
+                                text: '概率分布(%)'
+
+                            }
+                    },
+                    { // Primary yAxis
+                    labels: {
+                        formatter: function () {
+                            return this.value + '%';
+                        },
+                        style: {
+                            color: '#89A54E'
+                        }
+                    },
+                    title: {
+                        text: '成功率',
+                        style: {
+                            color: '#89A54E'
+                        }
+                    },
+                    opposite: true
+                }
+                ],
                 //tooltip: { formatter:function(){ return this.y +'% 概率 出现 '+ this.x.toFixed(2);} },
                 plotOptions: {
                     area: {
@@ -151,6 +177,9 @@ var app = (function(){
                                 }
                             }
                         }
+                    },
+                    line:{
+                        pointInterval:0.1
                     }
                 },
                 series: al[i]
@@ -208,20 +237,20 @@ var app = (function(){
                 if(ya[i] === undefined) ya[i] = 0;
                 else ya[i] = Math.round((100 * ya[i] / count)*100)/100;
 
-                if(ya_a[i] === undefined) ya_a[i] = 0;
+                if(ya_a[i] === undefined || ya[i] == 0) ya_a[i] = 0;
                 else ya_a[i] = Math.round((100 * ya_a[i] / count)*100)/100;
 
-                if(ya_h[i] === undefined) ya_h[i] = 0;
+                if(ya_h[i] === undefined || ya[i] == 0) ya_h[i] = 0;
                 else ya_h[i] = Math.round((100 * ya_h[i] / count)*100)/100;
 
-                if(ya_d[i] === undefined) ya_d[i] = 0;
+                if(ya_d[i] === undefined || ya[i] == 0) ya_d[i] = 0;
                 else ya_d[i] = Math.round((100 * ya_d[i] / count)*100)/100;
             }
             yas[j] = [
                 {"name":order[j] , "data":ya},
-                {"name":'胜比' , "data":ya_h},
-                {"name":'平比' , "data":ya_d},
-                {"name":'负比' , "data":ya_a}
+                {"name":'胜比' ,/*yAxis: 0,type: 'line',*/ min:0,"data":ya_h},
+                {"name":'平比' ,/*yAxis: 0,type: 'line',min:0,*/ "data":ya_d},
+                {"name":'负比' ,/*yAxis: 0,type: 'line', min:0,*/"data":ya_a}
             ];
 
         }
