@@ -125,11 +125,12 @@ var app = (function(){
      */
     function draw(d , a){
         var al = coll(d.data , a);
-        console.log(al);
+
 
         $('#j-result').empty();
 
-        //for(var i in al){
+        for(var i in al){
+            //console.log(al[i]);
             var obj = {
                 chart: { type: 'area' , zoomType:"x" },
                 title: { text: '概率分布' },
@@ -152,12 +153,12 @@ var app = (function(){
                         }
                     }
                 },
-                series: al
+                series: al[i]
             }
             var a = $('<div>');
             $('#j-result').append(a);
             a.highcharts(obj);
-        //}
+        }
 
     }
 
@@ -173,24 +174,55 @@ var app = (function(){
         for(var j =0 ;j<l ; j++){
             var d = data[j];
             var ya = [];
-            var count = 0;
+            var ya_h = [];
+            var ya_a = [];
+            var ya_d = [];
+            var count = 0, count_a = 0,count_h = 0,count_d = 0 ;
             for(var i in d){
                 var cur = parseInt(d[i].c);
+                var cur_h = parseInt(d[i].h);
+                var cur_a = parseInt(d[i].a);
+                var cur_d = parseInt(d[i].d);
+
+                // 累加所有
                 count += cur;
+
                 if(d[i].v != 'null' && d[i].v != null){
 
                     var v = parseFloat(parseFloat(d[i].v).toFixed(1)) * 10;
                     if(v > 99) v = 99;
+
                     if(ya[v] === undefined) ya[v] = 0;
-                    ya[v] = ya[v] + cur;
+                    if(ya_h[v] === undefined) ya_h[v] = 0;
+                    if(ya_a[v] === undefined) ya_a[v] = 0;
+                    if(ya_d[v] === undefined) ya_d[v] = 0;
+
+                    ya[v] += cur;
+                    ya_h[v] += cur_h;
+                    ya_a[v] += cur_a;
+                    ya_d[v] += cur_d;
                 }
 
             }
             for(var i=0;i<100;i++){
                 if(ya[i] === undefined) ya[i] = 0;
                 else ya[i] = Math.round((100 * ya[i] / count)*100)/100;
+
+                if(ya_a[i] === undefined) ya_a[i] = 0;
+                else ya_a[i] = Math.round((100 * ya_a[i] / count)*100)/100;
+
+                if(ya_h[i] === undefined) ya_h[i] = 0;
+                else ya_h[i] = Math.round((100 * ya_h[i] / count)*100)/100;
+
+                if(ya_d[i] === undefined) ya_d[i] = 0;
+                else ya_d[i] = Math.round((100 * ya_d[i] / count)*100)/100;
             }
-            yas[j] = {"name":order[j] , "data":ya};
+            yas[j] = [
+                {"name":order[j] , "data":ya},
+                {"name":'胜比' , "data":ya_h},
+                {"name":'平比' , "data":ya_d},
+                {"name":'负比' , "data":ya_a}
+            ];
 
         }
 
