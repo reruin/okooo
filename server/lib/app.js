@@ -125,6 +125,7 @@ function getJson(url , success , error){
 
 function getMatches(date , fn)
 {
+    if(date===undefined) date = "";
     logger.info('Start Crawl \n');
     timer = Date.now();
     getJson(config.match + "&save=true&date="+date, function(resp){
@@ -189,14 +190,14 @@ function getOdds(match ,fn){
  * 主函数
  * @param d
  */
-function main2(){
-    var now = utils.before(0);
-    getMatches(now , function(){
+function main(){
+    //var now = utils.before(0);
+    getMatches(undefined , function(){
         setTimeout( main  , config.tick);
     });
 }
 
-function main(){
+function main0(){
 
     var len = config.len || 365, i = config.start || 0, now;
     var process = function(){
