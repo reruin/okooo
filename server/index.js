@@ -12,17 +12,17 @@ var config = {
 
     //'odds_off':true,
     'start':1,
-    len : 160,
+    len : 10,
     // 开赔公司
     'company':[
-        //['ave','24'],
-        //['williamhill','14'],
-        ['interwetten','43']
+        ['ave','24']
+        ,['williamhill','14'],
+        ['interwetten','43'],
         //['ysb','35'],
-        //['ladbrokes','82'],
-        //['bet365','27']
+        ['ladbrokes','82'],
+        ['bet365','27'],
         //['macau','84'],
-        //['oddset','18']
+        ['oddset','18']
     ]
 
 };
